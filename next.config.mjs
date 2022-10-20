@@ -1,3 +1,3 @@
 export default {
-  basePath: process.env.GITHUB_ACTIONS === 'true' ? '/wichtel-guru' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/wichtel-guru' : '',
 }
