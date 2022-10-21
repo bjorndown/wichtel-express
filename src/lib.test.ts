@@ -5,6 +5,7 @@ describe('obfuscate', () => {
   it('must pad to given length', () => {
     expect(obfuscate('hans').length).toBe(PAD_TO_LENGTH)
     expect(obfuscate('quitealongname').length).toBe(PAD_TO_LENGTH)
+    expect(obfuscate('reallyaverylongnameunbelievable').length).toBe(68)
   })
 })
 
@@ -15,6 +16,9 @@ describe('padWith', () => {
   })
 })
 
-test.each(['Bjørn', 'Jacquéline'])('obfuscate/deobfuscate e2e', name => {
-  expect(deobfuscate(obfuscate(name))).toBe(name)
-})
+test.each(['Bjørn', 'Jacquéline', 'reallyaverylongnameunbelievable'])(
+  'obfuscate/deobfuscate e2e with "%s"',
+  name => {
+    expect(deobfuscate(obfuscate(name))).toBe(name)
+  }
+)
