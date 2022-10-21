@@ -61,16 +61,19 @@ const Index = () => {
           <tbody>
             {santas.map((person, i) => (
               <tr key={`person-${i}`}>
-                <td>{person.name}</td>
+                <td className="name">{person.name}</td>
+                <td className="visit-link">
+                  <a href={person.url} target="_blank">
+                    Link öffnen
+                  </a>
+                  <span className="footnote">*</span>
+                </td>
                 <td style={{ textAlign: 'right' }}>
                   <button
-                    onClick={() =>
-                      `Wichtel-Link für ${
-                        person.name
-                      }: ${navigator.clipboard.writeText(person.url)}`
-                    }
+                    onClick={() => navigator.clipboard.writeText(person.url)}
                   >
-                    Link kopieren
+                    Link
+                    <br /> kopieren
                   </button>
                 </td>
               </tr>
@@ -90,6 +93,25 @@ const Index = () => {
         <button className="full-width" onClick={reset}>
           Zurücksetzen
         </button>
+
+        <p>
+          <span className="footnote">*</span>
+          Name der/des Beschenkten ist nicht sichtbar.
+        </p>
+        <style jsx>{`
+          .name {
+            max-width: 125px;
+            overflow-wrap: break-word;
+          }
+          .footnote {
+            font-weight: bold;
+            margin: 0 0.2rem;
+          }
+          .visit-link {
+            font-size: medium;
+            text-align: right;
+          }
+        `}</style>
       </>
     )
   } else {
