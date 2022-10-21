@@ -121,7 +121,14 @@ const Index = () => {
             {santas.map((person, i) => (
               <tr key={`person-${i}`}>
                 <td>
+                  <label
+                    className="visuallyhidden"
+                    htmlFor={`input-person-${i}`}
+                  >
+                    Name Person {i}
+                  </label>
                   <input
+                    id={`input-person-${i}`}
                     onChange={event =>
                       setSantas(persons => {
                         persons[i] = { name: event.target.value }

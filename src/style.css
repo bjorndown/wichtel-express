@@ -44,3 +44,15 @@ button {
 button:active {
   background-color: #a52a2a91;
 }
+
+/* Thanks to https://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/ */
+.visuallyhidden {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
