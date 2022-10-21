@@ -43,8 +43,7 @@ const Index = () => {
 
   const addPerson = () => setSantas(n => [...santas, { name: '' }])
   const generateLink = (santa: SecretSanta): string => {
-    const url = new URL(location.href)
-    url.pathname = 'reveal'
+    const url = new URL('reveal', location.href)
     url.searchParams.append('s', santa.name)
     url.searchParams.append('p', obfuscate(santa.presentee))
     return url.toString()
