@@ -42,10 +42,13 @@ const Index = () => {
   }
 
   const addPerson = () => setSantas(n => [...santas, { name: '' }])
-  const generateLink = (santa: SecretSanta) =>
-    `${location.href}reveal?p=${obfuscate(santa.presentee)}&s=${obfuscate(
-      santa.name
-    )}` // TODO use new URL(..)
+  const generateLink = (santa: SecretSanta): string => {
+    const url = new URL(location.href)
+    url.pathname = 'reveal'
+    url.searchParams.append('s', santa.name)
+    url.searchParams.append('p', obfuscate(santa.presentee))
+    return url.toString()
+  }
 
   const isValid = (): boolean =>
     santas.every(person => (person.name?.length ?? 0) > 0) &&

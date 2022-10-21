@@ -11,26 +11,32 @@ const Reveal = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      setSanta(deobfuscate(firstQp(router.query.s)))
+      setSanta(firstQp(router.query.s))
       setPresentee(deobfuscate(firstQp(router.query.p)))
     }
   }, [router.isReady])
 
   return (
     <div className="container">
-      <h1 className="person">{santa}</h1>
+      <h1 className="person">{santa},</h1>
       <p>du bist der Wichtel von</p>
       {!clicked && (
         <button onClick={() => setClicked(true)}>Enthülle den Namen</button>
       )}
-      {clicked && <h2 className="person">{presentee}</h2>}
+      {clicked && <span className="person">{presentee}</span>}
 
       <style jsx>{`
         .container {
           text-align: center;
         }
+
         .person {
           color: var(--primary-bg-color);
+        }
+
+        span.person {
+          font-size: xx-large;
+          font-weight: bold;
         }
       `}</style>
     </div>
