@@ -41,7 +41,7 @@ const Index = () => {
     setSantas(ps => ps.map(p => ({ name: p.name })))
   }
 
-  const addPerson = () => setSantas(n => [...santas, { name: '' }])
+  const addPerson = () => setSantas(_ => [...santas, { name: '' }])
   const generateLink = (santa: SecretSanta): string => {
     const url = new URL('reveal', location.href)
     url.searchParams.append('s', santa.name)
@@ -61,18 +61,12 @@ const Index = () => {
             {santas.map((person, i) => (
               <tr key={`person-${i}`}>
                 <td className="name">{person.name}</td>
-                <td className="visit-link">
-                  <a href={person.url} target="_blank">
-                    Link öffnen
-                  </a>
-                  <span className="footnote">*</span>
-                </td>
+
                 <td style={{ textAlign: 'right' }}>
                   <button
                     onClick={() => navigator.clipboard.writeText(person.url)}
                   >
-                    Link
-                    <br /> kopieren
+                    Link kopieren
                   </button>
                 </td>
               </tr>
@@ -93,19 +87,17 @@ const Index = () => {
           Zurücksetzen
         </button>
 
-        <p>
-          <span className="footnote">*</span>
-          Name der/des Beschenkten ist nicht sichtbar.
-        </p>
         <style jsx>{`
           .name {
             max-width: 125px;
             overflow-wrap: break-word;
           }
+
           .footnote {
             font-weight: bold;
             margin: 0 0.2rem;
           }
+
           .visit-link {
             font-size: medium;
             text-align: right;
@@ -136,7 +128,7 @@ const Index = () => {
                       })
                     }
                     type="text"
-                    size={12}
+                    size={16}
                     value={person.name}
                   />
                 </td>
@@ -146,7 +138,7 @@ const Index = () => {
                       setSantas(persons => persons.filter((_, l) => l !== i))
                     }
                   >
-                    entfernen
+                    Löschen
                   </button>
                 </td>
               </tr>
@@ -162,7 +154,7 @@ const Index = () => {
         </table>
 
         <button
-          className="full-width"
+          className="full-width primary"
           disabled={!isValid() || drawingLots}
           onClick={drawLots}
         >

@@ -1,58 +1,85 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
+
+}
+
+p {
+    line-height: 2.1rem;
+
 }
 
 :root {
-  --primary-bg-color: brown;
-  --button-color: white;
+    --primary-bg-color: #09693c;
+    --bg-color: white;
+    --button-color: black;
+    --disabled-color: #ccc;
 }
 
 body {
-  font-size: x-large;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    font-size: large;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    padding: 0 0.5rem;
+
 }
 
 td {
-  padding: 0;
-  margin-bottom: 1rem;
+    padding: 0;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 input,
 button {
-  font-size: x-large;
-  margin: 0.3rem 0;
-  padding: 0.5rem 0.7rem;
+    font-size: large;
+    margin: 0.45rem 0;
+    padding: 0.3rem 0.5rem;
 }
 
 button {
-  border: none;
-  border-radius: 8px;
-  background-color: var(--primary-bg-color);
-  color: var(--button-color);
+    border: 1px solid var(--primary-bg-color);
+    border-radius: 5px;
+    background-color: var(--bg-color);
+    color: var(--button-color);
+}
+
+button.primary {
+    background-color: var(--primary-bg-color);
+    color: white;
+    padding: 0.8rem 0.5rem;
+    margin: 0.6rem 0;
+
+}
+
+button:disabled {
+    border: none;
+    background-color: var(--disabled-color);
 }
 
 .full-width {
-  width: 100%;
+    width: 100%;
 }
 
 button:active {
-  background-color: #a52a2a91;
+    background-color: #a52a2a91;
+}
+
+a {
+    color: var(--primary-bg-color);
 }
 
 /* Thanks to https://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/ */
 .visuallyhidden {
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
 }
