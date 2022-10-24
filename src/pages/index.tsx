@@ -1,6 +1,6 @@
 import _sample from 'lodash/sample'
 import { useMemo, useState } from 'react'
-import { obfuscate } from '../lib'
+import { ALLOWED_CHARS, obfuscate } from '../lib'
 
 type SecretSanta = {
   name: string
@@ -17,16 +17,20 @@ const Index = () => {
   const [drawingLots, setDrawingLots] = useState(false)
   const lotsDrawn = useMemo(() => santas.some(p => !!p.presentee), [santas])
 
-  const drawLots = () => {
+  const drawLots = (): void => {
     setDrawingLots(true)
-    while (santas.some(p => !p.presentee)) {
+    while (santas.some(santa => !santa.presentee)) {
       // TODO pull out
-      for (const person of santas) {
-        const otherPersons = santas.filter(p => p.name !== person.name)
-        const wichtel = _sample(otherPersons)
-        const alreadyWichtel = santas.some(p => p.presentee === wichtel.name)
-        if (!alreadyWichtel) {
-          person.presentee = wichtel.name
+      for (const santa of santas) {
+        const otherSantas = santas.filter(
+          otherSanta => otherSanta.name !== santa.name
+        )
+        const presentee = _sample(otherSantas) as SecretSanta // it will not be nullish
+        const alreadyPresentee = santas.some(
+          santa => santa.presentee === presentee.name
+        )
+        if (!alreadyPresentee) {
+          santa.presentee = presentee.name
         }
       }
     }
@@ -37,42 +41,42 @@ const Index = () => {
     )
   }
 
-  const reset = () => {
-    setSantas(ps => ps.map(p => ({ name: p.name })))
+  const reset = (): void => setSantas(ps => ps.map(p => ({ name: p.name })))
+  const addPerson = (): void => {
+    setSantas(_ => [...santas, { name: '' }])
   }
-
-  const addPerson = () => setSantas(_ => [...santas, { name: '' }])
   const generateLink = (santa: SecretSanta): string => {
     const url = new URL('reveal', location.href)
     url.searchParams.append('s', santa.name)
-    url.searchParams.append('p', obfuscate(santa.presentee))
+    url.searchParams.append('p', obfuscate(santa.presentee) as string)
     return url.toString()
   }
-
-  const isValid = (): boolean =>
+  const isReadyToDrawLots = (): boolean =>
     santas.every(person => (person.name?.length ?? 0) > 0) &&
-    santas.length === new Set(santas.map(p => p.name)).size
+    santas.length === new Set(santas.map(p => p.name)).size &&
+    santas.length > 2
 
   if (lotsDrawn) {
     return (
       <>
-        <table>
-          <tbody>
-            {santas.map((person, i) => (
-              <tr key={`person-${i}`}>
-                <td className="name">{person.name}</td>
+        <p>
+          Versenden Sie nun die persönlichen Links per e-Mail, SMS, WhatsApp,
+          Signal etc:
+        </p>
+        {santas.map((person, i) => (
+          <div className="row" key={`person-${i}`}>
+            <span className="name">{person.name}</span>
 
-                <td style={{ textAlign: 'right' }}>
-                  <button
-                    onClick={() => navigator.clipboard.writeText(person.url)}
-                  >
-                    Link kopieren
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            <button
+              className="action"
+              onClick={() =>
+                navigator.clipboard.writeText(person.url as string)
+              }
+            >
+              Link kopieren
+            </button>
+          </div>
+        ))}
         <button
           className="full-width"
           onClick={() =>
@@ -81,7 +85,7 @@ const Index = () => {
             )
           }
         >
-          Alle Links kopieren
+          Alle Namen und Links kopieren
         </button>
         <button className="full-width" onClick={reset}>
           Zurücksetzen
@@ -89,18 +93,7 @@ const Index = () => {
 
         <style jsx>{`
           .name {
-            max-width: 125px;
             overflow-wrap: break-word;
-          }
-
-          .footnote {
-            font-weight: bold;
-            margin: 0 0.2rem;
-          }
-
-          .visit-link {
-            font-size: medium;
-            text-align: right;
           }
         `}</style>
       </>
@@ -108,59 +101,58 @@ const Index = () => {
   } else {
     return (
       <>
-        <table>
-          <tbody>
-            {santas.map((person, i) => (
-              <tr key={`person-${i}`}>
-                <td>
-                  <label
-                    className="visuallyhidden"
-                    htmlFor={`input-person-${i}`}
-                  >
-                    Name Person {i}
-                  </label>
-                  <input
-                    id={`input-person-${i}`}
-                    onChange={event =>
-                      setSantas(persons => {
-                        persons[i] = { name: event.target.value }
-                        return persons.slice()
-                      })
-                    }
-                    type="text"
-                    size={16}
-                    value={person.name}
-                  />
-                </td>
-                <td style={{ textAlign: 'right' }}>
-                  <button
-                    onClick={() =>
-                      setSantas(persons => persons.filter((_, l) => l !== i))
-                    }
-                  >
-                    Löschen
-                  </button>
-                </td>
-              </tr>
-            ))}
-            <tr>
-              <td colSpan={2}>
-                <button className="full-width" onClick={addPerson}>
-                  Person hinzufügen
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <form onSubmit={drawLots}>
+          <p>Erfassen Sie alle Teilnehmer:</p>
+          {santas.map((person, i) => (
+            <div className="row" key={`input-person-${i}`}>
+              <label className="visually-hidden" htmlFor={`input-person-${i}`}>
+                Name Person {i + 1}
+              </label>
+              <input
+                id={`input-person-${i}`}
+                onChange={event =>
+                  setSantas(persons => {
+                    persons[i] = { name: event.target.value }
+                    return persons.slice()
+                  })
+                }
+                placeholder={`Name Person ${i + 1}`}
+                type="text"
+                size={16}
+                value={person.name}
+                minLength={3}
+                pattern={ALLOWED_CHARS.source}
+                aria-label={`Name Person ${i + 1}`}
+              />
+              <button
+                type="button"
+                className="delete-button"
+                onClick={() =>
+                  setSantas(persons => persons.filter((_, l) => l !== i))
+                }
+              >
+                Löschen
+              </button>
+            </div>
+          ))}
+          <button type="button" className="full-width" onClick={addPerson}>
+            Person hinzufügen
+          </button>
 
-        <button
-          className="full-width primary"
-          disabled={!isValid() || drawingLots}
-          onClick={drawLots}
-        >
-          Wichtel auslosen
-        </button>
+          <input
+            type="submit"
+            className="full-width primary"
+            disabled={!isReadyToDrawLots() || drawingLots}
+            value="Wichtel auslosen"
+          />
+        </form>
+
         {drawingLots && <span>Auslosung läuft...</span>}
+        <style jsx>{`
+          .delete-button {
+            margin-left: 0.5rem;
+          }
+        `}</style>
       </>
     )
   }

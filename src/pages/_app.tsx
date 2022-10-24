@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import '../style.css'
+import type { AppProps } from 'next/app'
 
-export default function MyApp({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className="container">
       <Head>
@@ -9,11 +10,14 @@ export default function MyApp({ Component, pageProps }) {
       </Head>
       <header>
         <h1>
-          Wichtel<span className="flipped">🚄</span>
+          <a href="/">
+            Wichtel<span className="flipped">🚄</span>
+          </a>
         </h1>
         <a title="Anleitung & Impressum" href="/impressum">
           ?
         </a>
+        <span className="claim">Auslosen ohne Anmeldung</span>
       </header>
       <main>
         <Component {...pageProps} />
@@ -21,15 +25,14 @@ export default function MyApp({ Component, pageProps }) {
 
       <style jsx>{`
         .container {
-          max-width: 450px;
+          max-width: 400px;
         }
 
         header {
           display: flex;
-          flex-flow: row;
-          flex-flow: wrap;
+          flex-flow: row wrap;
           justify-content: space-between;
-          margin: 1.5rem 0;
+          margin: 0.5rem 0 1.5rem 0;
         }
 
         header h1 {
@@ -37,19 +40,22 @@ export default function MyApp({ Component, pageProps }) {
         }
 
         .flipped {
-          -moz-transform: scale(-1, 1);
-          -webkit-transform: scale(-1, 1);
-          -o-transform: scale(-1, 1);
-          -ms-transform: scale(-1, 1);
           transform: scale(-1, 1);
           display: inline-block;
         }
 
         header a {
-          place-self: start;
+          text-decoration: none;
+          place-self: flex-start;
+        }
+
+        header .claim {
+          flex-basis: 100%;
+          font-size: medium;
         }
 
         main {
+          padding-top: 1rem;
         }
       `}</style>
     </div>

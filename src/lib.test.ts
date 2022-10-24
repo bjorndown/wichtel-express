@@ -3,9 +3,30 @@ import { deobfuscate, obfuscate, padWith, PAD_TO_LENGTH } from './lib'
 
 describe('obfuscate', () => {
   it('must pad to given length', () => {
-    expect(obfuscate('hans').length).toBe(PAD_TO_LENGTH)
-    expect(obfuscate('quitealongname').length).toBe(PAD_TO_LENGTH)
-    expect(obfuscate('reallyaverylongnameunbelievable').length).toBe(68)
+    expect(obfuscate('hans')?.length).toBe(PAD_TO_LENGTH)
+    expect(obfuscate('quitealongname')?.length).toBe(PAD_TO_LENGTH)
+    expect(obfuscate('reallyaverylongnameunbelievable')?.length).toBe(68)
+  })
+  it.each([[undefined], [null], ['']])(
+    'must return null if called with %s',
+    input => {
+      expect(obfuscate(input)).toBe(null)
+    }
+  )
+})
+
+describe('deobfuscate', () => {
+  it.each([
+    [undefined],
+    [null],
+    [''],
+    ['invalid'],
+    ['test'],
+    ['101010testasd'],
+    ['10104testtestt'],
+    ['http://scammy.site'],
+  ])('must return null if given invalid input like "%s"', input => {
+    expect(deobfuscate(input)).toBe(null)
   })
 })
 
@@ -16,7 +37,7 @@ describe('padWith', () => {
   })
 })
 
-test.each(['Bjørn', 'Jacquéline', 'reallyaverylongnameunbelievable'])(
+test.each(['Bjørn', 'Jacquéline', 'Jacques-Jérôme Pâtios', 'reallyaverylongnameunbelievable'])(
   'obfuscate/deobfuscate e2e with "%s"',
   name => {
     expect(deobfuscate(obfuscate(name))).toBe(name)
