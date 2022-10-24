@@ -10,7 +10,7 @@ export default function Document() {
         />
         <meta
           name="keywords"
-          content="wichtel, wichteln, auslosen, secret santa, schnell, einfach, unkompliziert, ohne anmeldung"
+          content="wichtel, wichteln, secret santa, auslosen, zuweisen, express, schnell, einfach, unkompliziert, ohne anmeldung"
         />
       </Head>
       <body>
