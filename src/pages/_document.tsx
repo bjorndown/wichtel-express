@@ -4,7 +4,6 @@ export default function Document() {
   return (
     <Html lang="de">
       <Head>
-        <title>wichtel.express</title>
         <meta
           name="description"
           content="Wichtel-Auslosung ohne Anmeldung &ndash; schnell und unkompliziert."
