@@ -6,7 +6,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className="container">
       <Head>
-        <title>wichtel.express</title>
+        <title>
+          wichtel.express &ndash; Wichtel-Auslosung schnell und ohne Anmeldung
+        </title>
       </Head>
       <header>
         <h1>

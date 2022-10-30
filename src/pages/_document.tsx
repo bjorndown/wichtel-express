@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         <meta
           name="description"
-          content="Wichtel-Auslosung ohne Anmeldung &ndash; schnell und unkompliziert."
+          content="Wichtel-Auslosung schnell und ohne Anmeldung"
         />
         <meta
           name="keywords"
