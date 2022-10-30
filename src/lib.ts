@@ -1,5 +1,6 @@
 import _random from 'lodash/random'
 import _range from 'lodash/range'
+import _sample from 'lodash/sample'
 
 const RANDOM_PREFIX_LENGTH = 4 // two two-digit hex numbers
 export const PAD_TO_LENGTH = 40
@@ -98,4 +99,38 @@ export const hexToString = (str: string): string | null => {
     console.error(error)
     return null
   }
+}
+
+export type SecretSanta = {
+  name: string
+  presentee?: string
+  url?: string
+}
+
+export const drawLots = (santas: SecretSanta[]): void => {
+  if (new Set(santas.map(s => s.name)).size !== santas.length) {
+    throw new Error('Names are not unique')
+  }
+
+  while (santas.some(santa => !santa.presentee)) {
+    for (const santa of santas) {
+      const otherSantas = santas.filter(
+        otherSanta => otherSanta.name !== santa.name
+      )
+      const presentee = _sample(otherSantas) as SecretSanta // it will not be nullish
+      const alreadyPresentee = santas.some(
+        santa => santa.presentee === presentee.name
+      )
+      if (!alreadyPresentee) {
+        santa.presentee = presentee.name
+      }
+    }
+  }
+}
+
+export const generateLink = (santa: SecretSanta): string => {
+  const url = new URL('reveal', location.href)
+  url.searchParams.append('s', santa.name)
+  url.searchParams.append('p', obfuscate(santa.presentee) as string)
+  return url.toString()
 }

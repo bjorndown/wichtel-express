@@ -1,12 +1,5 @@
-import _sample from 'lodash/sample'
 import { useMemo, useState } from 'react'
-import { ALLOWED_CHARS, obfuscate } from '../lib'
-
-type SecretSanta = {
-  name: string
-  presentee?: string
-  url?: string
-}
+import { ALLOWED_CHARS, drawLots, generateLink, SecretSanta } from '../lib'
 
 const Index = () => {
   const [santas, setSantas] = useState<SecretSanta[]>([
@@ -17,23 +10,9 @@ const Index = () => {
   const [drawingLots, setDrawingLots] = useState(false)
   const lotsDrawn = useMemo(() => santas.some(p => !!p.presentee), [santas])
 
-  const drawLots = (): void => {
+  const doDrawLots = (): void => {
     setDrawingLots(true)
-    while (santas.some(santa => !santa.presentee)) {
-      // TODO pull out
-      for (const santa of santas) {
-        const otherSantas = santas.filter(
-          otherSanta => otherSanta.name !== santa.name
-        )
-        const presentee = _sample(otherSantas) as SecretSanta // it will not be nullish
-        const alreadyPresentee = santas.some(
-          santa => santa.presentee === presentee.name
-        )
-        if (!alreadyPresentee) {
-          santa.presentee = presentee.name
-        }
-      }
-    }
+    drawLots(santas)
     setDrawingLots(false)
 
     setSantas(santas =>
@@ -45,12 +24,7 @@ const Index = () => {
   const addPerson = (): void => {
     setSantas(_ => [...santas, { name: '' }])
   }
-  const generateLink = (santa: SecretSanta): string => {
-    const url = new URL('reveal', location.href)
-    url.searchParams.append('s', santa.name)
-    url.searchParams.append('p', obfuscate(santa.presentee) as string)
-    return url.toString()
-  }
+
   const isReadyToDrawLots = (): boolean =>
     santas.every(person => (person.name?.length ?? 0) > 0) &&
     santas.length === new Set(santas.map(p => p.name)).size &&
@@ -101,7 +75,7 @@ const Index = () => {
   } else {
     return (
       <>
-        <form onSubmit={drawLots}>
+        <form onSubmit={doDrawLots}>
           <p>Erfassen Sie alle Teilnehmer:</p>
           {santas.map((person, i) => (
             <div className="row" key={`input-person-${i}`}>

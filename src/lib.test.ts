@@ -1,5 +1,12 @@
 import { random } from 'lodash'
-import { deobfuscate, obfuscate, padWith, PAD_TO_LENGTH } from './lib'
+import {
+  deobfuscate,
+  drawLots,
+  obfuscate,
+  padWith,
+  PAD_TO_LENGTH,
+  SecretSanta,
+} from './lib'
 
 describe('obfuscate', () => {
   it('must pad to given length', () => {
@@ -37,9 +44,58 @@ describe('padWith', () => {
   })
 })
 
-test.each(['Bjørn', 'Jacquéline', 'Jacques-Jérôme Pâtios', 'reallyaverylongnameunbelievable'])(
-  'obfuscate/deobfuscate e2e with "%s"',
-  name => {
-    expect(deobfuscate(obfuscate(name))).toBe(name)
-  }
-)
+test.each([
+  'Bjørn',
+  'Jacquéline',
+  'Jacques-Jérôme Pâtios',
+  'reallyaverylongnameunbelievable',
+])('obfuscate/deobfuscate e2e with "%s"', name => {
+  expect(deobfuscate(obfuscate(name))).toBe(name)
+})
+
+describe('drawLots', () => {
+  it('must fail if names are not unique', () => {
+    expect(() => drawLots([{ name: 'same' }, { name: 'same' }])).toThrowError(
+      /not unique/
+    )
+  })
+  it('must draw lots such that no-one draws him or herself and that lots are unique', () => {
+    const santas: SecretSanta[] = [
+      { name: 'Hans' },
+      { name: 'Otto' },
+      { name: 'Oskar' },
+      { name: 'Nadine' },
+      { name: 'Nina' },
+      { name: 'Anita' },
+      { name: 'Petra' },
+      { name: 'Sandra' },
+      { name: 'Flavia' },
+      { name: 'Andrea' },
+      { name: 'Tina' },
+      { name: 'Rosina' },
+      { name: 'Kurt' },
+      { name: 'Berta' },
+      { name: 'Karl' },
+      { name: 'Boris' },
+      { name: 'Sven' },
+      { name: 'Carla' },
+      { name: 'Xenia' },
+      { name: 'Sonja' },
+      { name: 'Reto' },
+      { name: 'Thomas' },
+      { name: 'Daniel' },
+      { name: 'Peter' },
+      { name: 'Monika' },
+      { name: 'Heidi' },
+      { name: 'Jacqueline' },
+    ]
+
+    drawLots(santas)
+
+    expect(santas.every(s => !!s.presentee)).toBe(true)
+    expect(santas.every(s => s.presentee !== s.name)).toBe(true)
+    expect(new Set(santas.map(s => s.name))).toStrictEqual(
+      new Set(santas.map(s => s.presentee))
+    )
+  })
+})
