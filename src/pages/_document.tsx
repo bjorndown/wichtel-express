@@ -12,6 +12,7 @@ export default function Document() {
           name="keywords"
           content="wichtel, wichteln, secret santa, auslosen, zuweisen, express, schnell, einfach, unkompliziert, ohne anmeldung"
         />
+        <link rel="icon" href="/favicon.png" type="image/png" />
       </Head>
       <body>
         <Main />
